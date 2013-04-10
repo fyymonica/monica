@@ -7,6 +7,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -113,11 +114,20 @@ public class LoginActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
 
+	private void saveSettings() {
+		String email = mEmailView.getText().toString();
+		_settings.set("email", email);
+		String pass = mPasswordView.getText().toString();
+		_settings.set("pass", pass);
+		String isSave = String.valueOf(mSavePassword.isChecked());
+		_settings.set("save-pass", isSave);
+		String isAutoLogin = String.valueOf(mAutoLogin.isChecked());
+		_settings.set("auto-login", isAutoLogin);
+		
+	}
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
@@ -128,15 +138,7 @@ public class LoginActivity extends Activity {
 			return;
 		}
 		
-		String email = mEmailView.getText().toString();
-		_settings.set("email", email);
-		String pass = mPasswordView.getText().toString();
-		_settings.set("pass", pass);
-		String isSave = String.valueOf(mSavePassword.isChecked());
-		_settings.set("save-pass", isSave);
-		String isAutoLogin = String.valueOf(mAutoLogin.isChecked());
-		_settings.set("auto-login", isAutoLogin);
-		
+		this.saveSettings();
 		
 
 		// Reset errors.
@@ -230,12 +232,14 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			
 			//Check network
 			if(!Network.isNetworkAvailable(LoginActivity.this)) {
 				mError = "Network is unavailable!";
 				return false;
 			}
-			//Try Login
+			//TODO Try Login
+			
 			return false;
 		}
 		
@@ -247,6 +251,7 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				jumpToMainActivity();
 				finish();
 			} else {
 				if (null == mError) {
@@ -258,6 +263,12 @@ public class LoginActivity extends Activity {
 					mPasswordView.requestFocus();
 				}
 			}
+		}
+
+		private void jumpToMainActivity() {
+			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			startActivity(intent);
+			LoginActivity.this.finish();
 		}
 
 		@Override

@@ -1,6 +1,6 @@
 package com.monica.campuscloudandroid.component;
 
-class WebInterface {
+public class WebInterface {
 	@SuppressWarnings("unused")
 	private Settings _settings;
 
