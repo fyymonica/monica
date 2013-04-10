@@ -232,6 +232,7 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			//For debug
 			
 			//Check network
 			if(!Network.isNetworkAvailable(LoginActivity.this)) {
