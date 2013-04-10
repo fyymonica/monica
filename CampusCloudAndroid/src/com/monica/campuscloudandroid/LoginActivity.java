@@ -1,5 +1,6 @@
 package com.monica.campuscloudandroid;
 
+import com.monica.campuscloudandroid.component.Network;
 import com.monica.campuscloudandroid.component.Settings;
 
 import android.animation.Animator;
@@ -26,13 +27,7 @@ import android.widget.TextView;
  * well.
  */
 public class LoginActivity extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
+	
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -93,17 +88,6 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						String email = mEmailView.getText().toString();
-						_settings.set("email", email);
-						String pass = mPasswordView.getText().toString();
-						_settings.set("pass", pass);
-						
-						String isSave = String.valueOf(mSavePassword.isChecked());
-						_settings.set("save-pass", isSave);
-						
-						String isAutoLogin = String.valueOf(mAutoLogin.isChecked());
-						_settings.set("auto-login", isAutoLogin);
-						
 						attemptLogin();
 					}
 				});
@@ -124,7 +108,8 @@ public class LoginActivity extends Activity {
 		Boolean isAutoLogin = Boolean.parseBoolean(this._settings.get("auto-login", "false"));
 		this.mAutoLogin.setChecked(isAutoLogin);
 		
-		if(isAutoLogin) {
+		String notAutoLogin = getIntent().getStringExtra("notAutoLogin");
+		if(isAutoLogin && null == notAutoLogin) {
 			this.attemptLogin();
 		}
 		
@@ -133,12 +118,13 @@ public class LoginActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		super.onCreateOptionsMenu(menu);
+
 		menu.add(Menu.NONE,Menu.FIRST,1,"设置").setIcon(
 				android.R.drawable.ic_menu_edit);
 		menu.add(Menu.NONE,Menu.FIRST,2,"退出").setIcon(
 				android.R.drawable.ic_menu_close_clear_cancel);
-		getMenuInflater().inflate(R.menu.login, menu);
+
+
 		return true;
 	}
 	
@@ -159,6 +145,17 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
+	private void saveSettings() {
+		String email = mEmailView.getText().toString();
+		_settings.set("email", email);
+		String pass = mPasswordView.getText().toString();
+		_settings.set("pass", pass);
+		String isSave = String.valueOf(mSavePassword.isChecked());
+		_settings.set("save-pass", isSave);
+		String isAutoLogin = String.valueOf(mAutoLogin.isChecked());
+		_settings.set("auto-login", isAutoLogin);
+		
+	}
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
@@ -168,6 +165,9 @@ public class LoginActivity extends Activity {
 		if (mAuthTask != null) {
 			return;
 		}
+		
+		this.saveSettings();
+		
 
 		// Reset errors.
 		mEmailView.setError(null);
@@ -196,11 +196,7 @@ public class LoginActivity extends Activity {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
-		}
+		} 
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -264,26 +260,18 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+			
+			//Check network
+			if(!Network.isNetworkAvailable(LoginActivity.this)) {
+				mError = "Network is unavailable!";
 				return false;
 			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
+			//TODO Try Login
+			
 			return false;
 		}
+		
+		protected String mError = null;
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
@@ -291,12 +279,24 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				jumpToMainActivity();
 				finish();
 			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
+				if (null == mError) {
+					mEmailView.setError(mError);
+					
+				} else {
+					mPasswordView
+							.setError(getString(R.string.error_incorrect_password));
+					mPasswordView.requestFocus();
+				}
 			}
+		}
+
+		private void jumpToMainActivity() {
+			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			startActivity(intent);
+			LoginActivity.this.finish();
 		}
 
 		@Override

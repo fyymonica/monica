@@ -92,7 +92,6 @@ public class Settings {
 	public void set(String key, String value) {
 		this._map.put(key, value);
 		this.saveSettings(_map);
-
 	}
 
 }
