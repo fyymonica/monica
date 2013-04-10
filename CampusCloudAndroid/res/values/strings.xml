@@ -7,5 +7,9 @@
     <string name="auto_login">Auto Login</string>
     <string name="save_password">Save Password</string>
     <string name="action_sign_in">Sign in</string>
-
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="address">Address: </string>
+    <string name="aboutUs">About Us: </string>
+    <string name="aboutUsContent">our campus cloud</string>
+    <string name="save">Save</string>
 </resources>

@@ -12,8 +12,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
@@ -106,14 +108,47 @@ public class LoginActivity extends Activity {
 		Boolean isAutoLogin = Boolean.parseBoolean(this._settings.get("auto-login", "false"));
 		this.mAutoLogin.setChecked(isAutoLogin);
 		
-		String notAutoLogin = getIntent().getStringExtra("notAutoLogin");
-		if(isAutoLogin && null == notAutoLogin) {
-			this.attemptLogin();
+		String ipAddr = _settings.get("address", "");
+		if(TextUtils.isEmpty(ipAddr)) {
+			this.jumpToSettingsActivity();
+		} else {
+			String notAutoLogin = getIntent().getStringExtra("notAutoLogin");
+			if(isAutoLogin && null == notAutoLogin) {
+				this.attemptLogin();
+			}
 		}
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+
+		menu.add(Menu.NONE,Menu.FIRST,1,"Setting").setIcon(
+				android.R.drawable.ic_menu_edit);
+		menu.add(Menu.NONE,Menu.FIRST,2,"Exit").setIcon(
+				android.R.drawable.ic_menu_close_clear_cancel);
+
+
+		return true;
+	}
+	
+	private void jumpToSettingsActivity() {
+		Intent intent = new Intent(LoginActivity.this,
+				SettingsActivity.class);
+		startActivity(intent);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		CharSequence cs = item.getTitle();
+		String title = cs.toString();
+		Log.d("onOptionItemSelected", title);
+		if (title == "Setting") {
+			this.jumpToSettingsActivity();
+		}
+		if(title == "Exit"){
+			this.finish();
+		}
 		return true;
 	}
 
@@ -232,8 +267,7 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			//For debug
-			
+
 			//Check network
 			if(!Network.isNetworkAvailable(LoginActivity.this)) {
 				mError = "Network is unavailable!";
@@ -241,7 +275,7 @@ public class LoginActivity extends Activity {
 			}
 			//TODO Try Login
 			
-			return false;
+			return true;
 		}
 		
 		protected String mError = null;
