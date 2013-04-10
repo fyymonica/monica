@@ -6,12 +6,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
@@ -124,12 +127,35 @@ public class LoginActivity extends Activity {
 		if(isAutoLogin) {
 			this.attemptLogin();
 		}
+		
+		
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+//		super.onCreateOptionsMenu(menu);
+		menu.add(Menu.NONE,Menu.FIRST,1,"设置").setIcon(
+				android.R.drawable.ic_menu_edit);
+		menu.add(Menu.NONE,Menu.FIRST,2,"退出").setIcon(
+				android.R.drawable.ic_menu_close_clear_cancel);
 		getMenuInflater().inflate(R.menu.login, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+//		super.onOptionsItemSelected(item);
+		CharSequence cs = item.getTitle();
+		String title = cs.toString();
+		Log.d("onOptionItemSelected", title);
+		if (title == "设置") {
+			Intent intent = new Intent(LoginActivity.this,
+					SettingsActivity.class);
+			startActivity(intent);
+		}
+		if(title == "退出"){
+			this.finish();
+		}
 		return true;
 	}
 
