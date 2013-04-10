@@ -1,5 +1,7 @@
 package com.monica.campuscloudandroid;
 
+import com.monica.campuscloudandroid.component.Settings;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -12,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,12 +50,18 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-
+	private CheckBox mAutoLogin;
+	private CheckBox mSavePassword;
+	// misc
+	Settings _settings = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		this._settings = Settings.instance(this.getApplication());
 		setContentView(R.layout.activity_login);
+		
 
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
@@ -76,16 +85,47 @@ public class LoginActivity extends Activity {
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
+		
 		findViewById(R.id.sign_in_button).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
+						String email = mEmailView.getText().toString();
+						_settings.set("email", email);
+						String pass = mPasswordView.getText().toString();
+						_settings.set("pass", pass);
+						
+						String isSave = String.valueOf(mSavePassword.isChecked());
+						_settings.set("save-pass", isSave);
+						
+						String isAutoLogin = String.valueOf(mAutoLogin.isChecked());
+						_settings.set("auto-login", isAutoLogin);
+						
 						attemptLogin();
 					}
 				});
+		
+		mSavePassword = (CheckBox)findViewById(R.id.checkBox_savepassword);
+		mAutoLogin = (CheckBox)findViewById(R.id.checkBox_autologin);
+		
+		//fill form
+		String email = this._settings.get("email","");
+		this.mEmailView.setText(email);
+		
+		String pass = this._settings.get("pass","");
+		this.mPasswordView.setText(pass);
+		
+		Boolean isSavePass = Boolean.parseBoolean(this._settings.get("save-pass","false"));
+		this.mSavePassword.setChecked(isSavePass);
+		
+		Boolean isAutoLogin = Boolean.parseBoolean(this._settings.get("auto-login", "false"));
+		this.mAutoLogin.setChecked(isAutoLogin);
+		
+		if(isAutoLogin) {
+			this.attemptLogin();
+		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -216,7 +256,7 @@ public class LoginActivity extends Activity {
 			}
 
 			// TODO: register the new account here.
-			return true;
+			return false;
 		}
 
 		@Override
