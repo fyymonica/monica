@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 		this._webClient = new WebClient();
 		this._processDialog = new ProgressDialog(this);
 		this._processDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		this._processDialog.setMessage("载入中...");
+		this._processDialog.setMessage("loading...");
 
 		_webView = (WebView) findViewById(R.id.webView_content);
 
@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
 		if (Network.isNetworkAvailable(this)) {
 			_webView.loadUrl(abs_url);
 		} else {
-			Toast.makeText(getApplicationContext(), "请连接网络", Toast.LENGTH_SHORT)
+			Toast.makeText(getApplicationContext(), "Network is unavailable", Toast.LENGTH_SHORT)
 					.show();
 		}
 
@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
 		CharSequence cs = item.getTitle();
 		String title = cs.toString();
 		Log.d("onOptionItemSelected", title);
-		if (title == "退出") {
+		if (title == "Exit") {
 			this.finish();
 		}
 		return true;
@@ -112,7 +112,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, Menu.FIRST, 1, "退出").setIcon(
+		menu.add(Menu.NONE, Menu.FIRST, 1, "Exit").setIcon(
 				android.R.drawable.ic_menu_close_clear_cancel);
 		return true;
 	}
