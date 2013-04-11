@@ -10,6 +10,6 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="address">Address: </string>
     <string name="aboutUs">About Us: </string>
-    <string name="aboutUsContent">our campus cloud</string>
-    <string name="save">Save</string>
+    <string name="aboutUsContent">CampusCloud Android v2.01\nPowered by: CampusCloud Team\nAll rights reserved\n2013.4.11</string>
+    <string name="save">Connect</string>
 </resources>

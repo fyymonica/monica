@@ -7,5 +7,4 @@ public class WebInterface {
 	public WebInterface(Settings settings) {
 		this._settings = settings;
 	}
-
 }

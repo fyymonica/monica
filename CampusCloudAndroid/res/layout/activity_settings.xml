@@ -25,9 +25,8 @@
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/address" 
-                android:textSize="30px"
-                />
+                android:text="@string/address"
+                android:textSize="40sp" />
 
             <EditText
                 android:id="@+id/editText_address"
@@ -38,14 +37,14 @@
                 android:inputType="textPostalAddress" />
         </LinearLayout>
 
-       
         <Button
             android:id="@+id/saveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_weight="0.1"
             android:text="@string/save"
-            android:layout_weight="0.1" />
+            android:textSize="25sp" />
 
          <LinearLayout 
             android:layout_width="match_parent"
@@ -53,15 +52,13 @@
             android:layout_weight="30" >
             </LinearLayout>
         
-        
         <TextView
             android:id="@+id/aboutUs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/aboutUs"
-            android:textSize="30px"
-            />
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/aboutUsContent"
@@ -69,8 +66,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="70"
             android:text="@string/aboutUsContent"
-            android:textSize="20px"
-             />
+            android:textSize="25sp" />
+
     </LinearLayout>
 
 </RelativeLayout>
