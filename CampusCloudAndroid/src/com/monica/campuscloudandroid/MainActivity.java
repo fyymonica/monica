@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	final String HOME_URL = "/eyeos/";
+	final String HOME_URL = "/campuscloud/";
 
 	WebView _webView = null;
 	WebClient _webClient = null;
@@ -123,7 +123,7 @@ public class MainActivity extends Activity {
 		this._webView.addJavascriptInterface(this._webInterface, "interface");
 
 		
-		// ¼ÓÔØÖ÷Ò³
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 		navigate_remote(HOME_URL);
 	}
 
